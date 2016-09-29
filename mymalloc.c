@@ -38,7 +38,14 @@ void * mymalloc(int bytes, char * file, int line){
 	return NULL;
 }
 
+void free(void * p){
+	int * p = (int *) (&myblock[p-4]);
+	if (p == 0){
+		printf("ERROR YOUR FREEING SHIT YOU DONT HAVE\n");
+		return;
+	}
 
+}
 int main(){
 	char * a = malloc(8);
 	// int * intlocation = (int*)(&myblock[13]);
