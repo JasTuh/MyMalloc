@@ -8,30 +8,46 @@
 
 
 int testA(){
-	char * a[50];
+	char * a[5];
 	int i =0;
-	for (;i<50;i++){
+	for (;i<5;i++){
 		a[i] = (char *) malloc(1);
-		printf("a[%d]=%d\n", i,(a[i] - 6295648));
+		if (a[i] == NULL){
+			return -1;
+		}
+		// printf("a[%d]=%d\n", i,(a[i] - ((int) (a[0]-4)) ));
 	}
-	int * p = (int *) (a[0]-4);
-	printf("%d\n", *p);
-	free(a[0]);
-	p = (int *) (a[1]-4);
-	printf("a[1] = %d\n", *p);
-	free(a[1]);
-	p = (int *) (a[1]-4);
-	printf("a[1] = %d\n", *p);
-	p = (int *) (a[0]-4);
-	printf("%d\n", *p);
+	i =0;
+	int * value = (int *) (a[0]-4);
+	for (;i<5;i++){
+		free(a[i]);
+		// printf("a[%d]=%d\n", 0, *value);
+	}
+	return 0;
+}
+int testB(){
+	int i = 0;
+	for(;i < 100; i++){
+		char * a = (char *) malloc(sizeof(char));
+		free(a);
+	}
 	return 0;
 }
 int main(){
 	printf("%d\n", testA());
-	// char * a = malloc(8);
-	// printf("a=%d\n", (a-6299744));
+	printf("%d\n", testB());
+	// char * a = malloc(sizeof(char));
+	// printf("a=%d\n", (a - 6295648));
 	// char * b = malloc(15);
-	// printf("b=%d\n", (b-6299744));
+	// printf("b=%d\n", (b-6295648));
+	// printf("\n\n");
+	// printHeap();
+	// free(b);
+	// printf("\n\n");
+	// printHeap();
+	// free(a);
+	// printf("\n\n\n");
+	// printHeap();
 	// char * c = malloc(15);
 	// printf("c=%d\n", (c-6299744));
 	// char * d = malloc(30);

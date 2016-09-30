@@ -10,4 +10,4 @@ memgrind: memgrind.c mymalloc.c
 	$(CC) $(CCFLAGS) -g -o memgrind memgrind.c
 
 clean:
-	rm -rf *.o format calc
+	rm memgrind

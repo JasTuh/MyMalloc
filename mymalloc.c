@@ -7,22 +7,12 @@
 
 static char myblock[SIZE];
 
-/*
-THERES AN ERROR BECEAUSE IM NOT REFERING TO THE RIGHT INDEX BECAUSE IM NOT INCLUDING PAST ONES
-*/
 void * split(int * p, int bytesOrOne, int toAdd){
-	int oldValue = *p == 0 ? SIZE : *p;
-	// printf("SPLIT p = %d\n", *p);
-	// printf("SPLIT bOrO = %d\n", bytesOrOne);
-	// printf("toAdd =  %d\n", toAdd);
-	// printf("oldValue =  %d\n", oldValue);
+	int oldValue = *p == 0 ? (SIZE-4) : *p;
 	*p = bytesOrOne;
 	void * toReturn = (void *) p+4;
 	int * p1 = (int *) (&myblock[(toAdd + 4 + bytesOrOne - 1)]);
-	int newValue = (oldValue - (4 + bytesOrOne));
-	if (newValue % 2 == 1){
-		newValue++;
-	}
+	int newValue = (oldValue - (4 + (bytesOrOne - 1)));
 	if (newValue < 0){
 		*p += 2;
 		return toReturn;	
@@ -30,7 +20,6 @@ void * split(int * p, int bytesOrOne, int toAdd){
 	else{ 
 		*p1 = newValue;
 	}
-	// printf("newValue =  %d\n", newValue);
 	return toReturn;
 }
 
@@ -52,96 +41,64 @@ void * mymalloc(int bytes, char * file, int line){
 			toAdd+=oldValue+4;
 			
 		}
-		else if (*p > bytes){
+		else if (*p >= bytes){
 			return split(p,bytesOrOne, toAdd);
 		}
 	}
+	printf("%s made this function error on line %d\n", file, line);
 	return NULL;
 }
+void combine(){
+	int * current = (int*)(&myblock[0]);
+	int * prev = NULL;
+	int toAdd = 0;
+	while((void *)current < (void *)&myblock[SIZE] && *current != 0){	
+		int currentValue = *current;
+		int prevValue = prev == NULL ? 1:*prev;
+		if (currentValue % 2 == 0 && (prevValue % 2 == 0)){
+			*prev = currentValue+prevValue + 4;
+			int * toCheck = (int*)(&myblock[0]);
+			current = (void *)(&myblock[(toAdd + currentValue + 4)]);
+		}
+		else{
+			prev = current;
+			if (currentValue %2 == 1){
+				currentValue--;
+			}
+			current = (int *) (&myblock[(toAdd + (currentValue) + 4)]);
+			toAdd += currentValue + 4;
+		}
 
+	}
+}
+void printHeap(){
+	int * p = (int*)(&myblock[0]);
+	int toAdd = 0;
+	int i = 0;
+	for (; i < 100; i++){
+		p = (int *) (&myblock[i]);
+		if (*p != 0){
+			printf("found a %d at %d\n", *p, i);
+		}
+	}
+	// while((void *)p < (void *)&myblock[SIZE] && *p != 0){
+	// 	printf("%d\n", *p);	
+	// 	int oldValue = *p;
+	// 	if (oldValue % 2 == 1){
+	// 		oldValue--;
+	// 	}
+	// 	printf("looking at index %d\n", (toAdd + oldValue + 4));
+	// 	p = (int *) (&myblock[(toAdd + oldValue + 4)]);
+
+	// 	toAdd += oldValue + 4;
+	// }
+}
 void myfree(void * toFree, char * file, int line){
 	int * p = (int *) ((toFree-4));
 	if (*p == 0){
 		printf("ERROR YOUR FREEING SHIT YOU DONT HAVE\n");
 		return;
 	}
-	
 	*p = *p - 1;
-	int * nextone = (int *) ((toFree-4) + (*p + 4)); //(p+(*p+4));
-	if ((*nextone & 1) != 1){
-		int newInt = (*p);
-		if (newInt % 2 != 0){
-			newInt++;
-		}
-		*p = newInt;
-		*nextone = 0;
-	}
+	combine();
 }
-// int main(){
-// 	char * a = malloc(8);
-// 	printf("a=%d\n", (a-6299744));
-// 	char * b = malloc(15);
-// 	printf("b=%d\n", (b-6299744));
-// 	char * c = malloc(15);
-// 	printf("c=%d\n", (c-6299744));
-// 	char * d = malloc(30);
-// 	printf("d=%d\n", (d-6299744));
-// 	int * p1 = (int*)(&myblock[32]);
-// 	printf("p1=%d\n", *p1);
-// 	int * p = (int*)(&myblock[0]);
-// 	int toAdd = 0;
-// 	while((void *)p < (void *)&myblock[SIZE] && *p != 0){
-// 		printf("%d\n", *p);	
-// 		int oldValue = *p;
-// 		if (oldValue % 2 == 1){
-// 			oldValue--;
-// 		}
-// 		printf("looking at index %d\n", (toAdd + oldValue + 4));
-// 		p = (int *) (&myblock[(toAdd + oldValue + 4)]);
-// 		toAdd += oldValue + 4;
-// 	}
-// 	free(b);
-// 	p = (int*)(&myblock[0]);
-// 	toAdd = 0;
-// 	while((void *)p < (void *)&myblock[SIZE] && *p != 0){
-// 		printf("%d\n", *p);	
-// 		int oldValue = *p;
-// 		if (oldValue % 2 == 1){
-// 			oldValue--;
-// 		}
-// 		printf("looking at index %d\n", (toAdd + oldValue + 4));
-// 		p = (int *) (&myblock[(toAdd + oldValue + 4)]);
-// 		toAdd += oldValue + 4;
-// 	}
-// 	char * basfa = malloc(7);
-// 	p = (int*)(&myblock[0]);
-// 	toAdd = 0;
-// 	while((void *)p < (void *)&myblock[SIZE] && *p != 0){
-// 		printf("%d\n", *p);	
-// 		int oldValue = *p;
-// 		if (oldValue % 2 == 1){
-// 			oldValue--;
-// 		}
-// 		printf("looking at index %d\n", (toAdd + oldValue + 4));
-// 		p = (int *) (&myblock[(toAdd + oldValue + 4)]);
-// 		toAdd += oldValue + 4;
-// 	}
-// 	char * b3 = malloc(2);
-// 	printf("b3=%d\n", (b3-6299744));
-	
-	// free(b);
-// 	// printf("sep\n");
-// 	// p = (int*)(&myblock[0]);
-// 	// while((void *)p < (void *)&myblock[SIZE] && *p != 0){
-// 	// 	printf("%d\n", *p);	
-// 	// 	p = (int *) (&myblock[((*p|1) + 4)]);
-// 	// }
-// 	// b = malloc(15);
-// 	// printf("sep\n");
-// 	// p = (int*)(&myblock[0]);
-// 	// while((void *)p < (void *)&myblock[SIZE] && *p != 0){
-// 	// 	printf("%d\n", *p);	
-// 	// 	p = (int *) (&myblock[((*p|1) + 4)]);
-// 	// }
-// 	return 0;
-// }

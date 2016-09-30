@@ -1,0 +1,13 @@
+a[0]=4
+a[1]=10
+currentValue = 2, prevValue = 1
+currentValue = 3, prevValue = 2
+currentValue = 19, prevValue = 3
+a[0]=2
+currentValue = 2, prevValue = 1
+currentValue = 2, prevValue = 2
+(currentValue+prevValue) = 4
+currentValue = 4988, prevValue = 0
+(currentValue+prevValue) = 4988
+a[0]=8
+0
