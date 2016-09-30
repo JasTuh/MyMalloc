@@ -23,7 +23,13 @@ void * split(int * p, int bytesOrOne, int toAdd){
 	if (newValue % 2 == 1){
 		newValue++;
 	}
-	*p1 = newValue;
+	if (newValue < 0){
+		*p += 2;
+		return toReturn;	
+	}
+	else{ 
+		*p1 = newValue;
+	}
 	// printf("newValue =  %d\n", newValue);
 	return toReturn;
 }
@@ -74,13 +80,13 @@ void myfree(void * toFree, char * file, int line){
 }
 int main(){
 	char * a = malloc(8);
-	printf("a=%d\n", (a-6295648));
+	printf("a=%d\n", (a-6299744));
 	char * b = malloc(15);
-	printf("b=%d\n", (b-6295648));
+	printf("b=%d\n", (b-6299744));
 	char * c = malloc(15);
-	printf("c=%d\n", (c-6295648));
+	printf("c=%d\n", (c-6299744));
 	char * d = malloc(30);
-	printf("d=%d\n", (d-6295648));
+	printf("d=%d\n", (d-6299744));
 	int * p1 = (int*)(&myblock[32]);
 	printf("p1=%d\n", *p1);
 	int * p = (int*)(&myblock[0]);
@@ -109,6 +115,20 @@ int main(){
 		toAdd += oldValue + 4;
 	}
 	char * basfa = malloc(7);
+	p = (int*)(&myblock[0]);
+	toAdd = 0;
+	while((void *)p < (void *)&myblock[SIZE] && *p != 0){
+		printf("%d\n", *p);	
+		int oldValue = *p;
+		if (oldValue % 2 == 1){
+			oldValue--;
+		}
+		printf("looking at index %d\n", (toAdd + oldValue + 4));
+		p = (int *) (&myblock[(toAdd + oldValue + 4)]);
+		toAdd += oldValue + 4;
+	}
+	char * b3 = malloc(2);
+	printf("b3=%d\n", (b3-6299744));
 	p = (int*)(&myblock[0]);
 	toAdd = 0;
 	while((void *)p < (void *)&myblock[SIZE] && *p != 0){
