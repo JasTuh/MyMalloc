@@ -18,7 +18,7 @@ int testA(){
 		// printf("a[%d]=%d\n", i,(a[i] - ((int) (a[0]-4)) ));
 	}
 	i =0;
-	int * value = (int *) (a[0]-4);
+	// int * value = (int *) (a[0]-4);
 	for (;i<5;i++){
 		free(a[i]);
 		// printf("a[%d]=%d\n", 0, *value);

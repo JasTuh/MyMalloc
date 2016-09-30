@@ -57,7 +57,6 @@ void combine(){
 		int prevValue = prev == NULL ? 1:*prev;
 		if (currentValue % 2 == 0 && (prevValue % 2 == 0)){
 			*prev = currentValue+prevValue + 4;
-			int * toCheck = (int*)(&myblock[0]);
 			current = (void *)(&myblock[(toAdd + currentValue + 4)]);
 		}
 		else{
@@ -73,7 +72,6 @@ void combine(){
 }
 void printHeap(){
 	int * p = (int*)(&myblock[0]);
-	int toAdd = 0;
 	int i = 0;
 	for (; i < 100; i++){
 		p = (int *) (&myblock[i]);
@@ -81,17 +79,6 @@ void printHeap(){
 			printf("found a %d at %d\n", *p, i);
 		}
 	}
-	// while((void *)p < (void *)&myblock[SIZE] && *p != 0){
-	// 	printf("%d\n", *p);	
-	// 	int oldValue = *p;
-	// 	if (oldValue % 2 == 1){
-	// 		oldValue--;
-	// 	}
-	// 	printf("looking at index %d\n", (toAdd + oldValue + 4));
-	// 	p = (int *) (&myblock[(toAdd + oldValue + 4)]);
-
-	// 	toAdd += oldValue + 4;
-	// }
 }
 void myfree(void * toFree, char * file, int line){
 	int * p = (int *) ((toFree-4));
