@@ -8,20 +8,23 @@
 
 
 int testA(){
-	char * a[5];
+	char * a[20];
 	int i =0;
-	for (;i<5;i++){
+	for (;i<20;i++){
 		a[i] = (char *) malloc(1);
 		if (a[i] == NULL){
 			return -1;
 		}
-		// printf("a[%d]=%d\n", i,(a[i] - ((int) (a[0]-4)) ));
+		printf("a[%d]=%d\n", i,(a[i] - ((int) (a[0]-4)) ));
+		int * p = (int *) (a[i] - 4);
+		printf("implicit int = %d\n", *p); //this should not be 0 :(
+
 	}
 	i =0;
-	// int * value = (int *) (a[0]-4);
-	for (;i<5;i++){
+	int * value = (int *) (a[0]-4);
+	for (;i<20;i++){
 		free(a[i]);
-		// printf("a[%d]=%d\n", 0, *value);
+		printf("a[%d]=%d\njust tried to free %d\n", 0, *value, i);
 	}
 	return 0;
 }
@@ -33,8 +36,12 @@ int testB(){
 	}
 	return 0;
 }
+int testC(){
+
+}
 int main(){
 	printf("%d\n", testA());
+	printf("ASFASDKLFJADSF\n");
 	printf("%d\n", testB());
 	// char * a = malloc(sizeof(char));
 	// printf("a=%d\n", (a - 6295648));

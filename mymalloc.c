@@ -10,7 +10,7 @@ static char myblock[SIZE];
 void * split(int * p, int bytesOrOne, int toAdd){
 	int oldValue = *p == 0 ? (SIZE-4) : *p;
 	*p = bytesOrOne;
-	void * toReturn = (void *) p+4;
+	void * toReturn = (p+4);
 	int * p1 = (int *) (&myblock[(toAdd + 4 + bytesOrOne - 1)]);
 	int newValue = (oldValue - (4 + (bytesOrOne - 1)));
 	if (newValue < 0){
