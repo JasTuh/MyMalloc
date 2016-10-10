@@ -86,6 +86,10 @@ void myfree(void * toFree, char * file, int line){
 		printf("ERROR YOUR FREEING SHIT YOU DONT HAVE\n");
 		return;
 	}
+	if (*p % 2 == 0){
+		printf("THATS ALREADY FREED\n");
+		return;
+	}
 	*p = *p - 1;
 	combine();
 }
