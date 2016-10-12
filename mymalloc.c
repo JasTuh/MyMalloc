@@ -60,7 +60,7 @@ void combine(){
 	int * current = (int*)(&myblock[0]);
 	int * prev = NULL;
 	int toAdd = 0;
-	printHeap();
+	// printHeap();
 	int callAgain = 0;
 	while((void *)current < (void *)&myblock[SIZE] && *current != 0){	
 		int currentValue = *current;
@@ -95,6 +95,7 @@ void printHeap(){
 		toAdd+=(oldValue&~1)+4;
 	}
 }
+//add going through the list 
 void myfree(void * toFree, char * file, int line){
 	int * p = (int *) ((toFree-4));
 	if (*p == 0){
