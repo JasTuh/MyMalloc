@@ -13,21 +13,30 @@ void * split(int * p, int bytesOrOne, int toAdd){
 		void * toReturn = ((void *)p)+4;
 		return toReturn;
 	}
+
+	if (*p != 0 && (*p)-4 <= (bytesOrOne-1)){
+		*p += 1;
+		void * toReturn = ((void *)p)+4;
+		return toReturn;
+	}
 	int oldValue = *p == 0 ? (SIZE-4) : *p;
 	*p = bytesOrOne;
 	// printf("setting memory address %d to %d\n", p, bytesOrOne);
 
 	void * toReturn = ((void *)p)+4;
 	int * p1 = (int *) (&myblock[(toAdd + 4 + bytesOrOne - 1)]);
+
 	int newValue = (oldValue - (4 + (bytesOrOne - 1)));
-	if (newValue < 0){
-		*p += 2;
-		return toReturn;	
-	}
-	else{ 
+	// printf("FUCK THOMAS %d AND %d AND %d\n", (toAdd + 4 + bytesOrOne - 1), newValue, (toAdd + 4 + bytesOrOne - 1) - (bytesOrOne - 1));
+	// printf("*p = %d \n", *p);
+	// if (newValue <= 0){ //was <= 1
+	// 	*p += (toAdd + 4 + bytesOrOne - 1) - (bytesOrOne - 1);
+	// 	return toReturn;	
+	// }
+	// else{ 
 		// printf("setting memory address %d to %d\n", p1, newValue);
 		*p1 = newValue;
-	}
+	// }
 	return toReturn;
 }
 

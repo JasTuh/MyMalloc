@@ -6,7 +6,7 @@
 #include "mymalloc.c"
 #define malloc( x ) mymalloc( x, __FILE__, __LINE__ )
 #define free( x ) myfree( x, __FILE__, __LINE__ )
-#define MEMES 10
+#define MEMES 3000
 
 int testA(){
 	int total = 0, counter = 0;
@@ -56,56 +56,105 @@ int testB(){
 }
 int testC(){
 	int total = 0, counter = 0;
-	char * a[3000];
+	char * a[MEMES];
 	srand(time(NULL));
 	while (counter < 100){
 		clock_t start = clock(), diff;
 
 		int r = rand() % 10, i = 0, freeIndex = 0, mallocIndex = 0; 
 
-		while (i < 6000){
-			if (mallocIndex == 3000){
-				if (freeIndex < 3000){
+		while (i < 2*MEMES){
+			if (mallocIndex == MEMES){
+				if (freeIndex < MEMES){
+					int * temp = (int *) (a[freeIndex]-4);
+					// printf("freeing %d\n", *temp);
 					free(a[freeIndex++]);
 				}
 			}
 			else if (freeIndex >= mallocIndex){
-				if (mallocIndex < 3000){
+				if (mallocIndex < MEMES){
 					a[mallocIndex++] = (char *) malloc(1);
 					if (a[mallocIndex-1] == NULL){
-						printf("Malloc ran out of space.\n");
+						// printf("Malloc ran out of space.\n");
 						exit(1);
 					}
 				}
 			} else if (r > 4){
-				if (mallocIndex < 3000){
+				if (mallocIndex < MEMES){
 					a[mallocIndex++] = (char *) malloc(1);
 					if (a[mallocIndex-1] == NULL){
-						printf("Malloc ran out of space.\n");
+						// printf("Malloc ran out of space.\n");
 						exit(1);
 					}
 				}
 			}
 			else{
-				if (freeIndex < 3000){
+				if (freeIndex < MEMES){
+					int * temp = (int *) (a[freeIndex]-4);
+					// printf("freeing %d\n", *temp);
 					free(a[freeIndex++]);
 				}
 			}
 			r = rand() % 10;
 			i++;
+			// printHeap();
 		}
 		diff = clock() - start;
 		total += diff;
 		counter++;
+		// printf("ASDFASDF:LKASDFL:KASDF:ADSFASDFASDFADSFADSF\n");
 	}
 	return total/100;
 }
+long int test_c(){
+	char* saved[3000];
+	int count = 0;
+	int pos = 0;
+	struct timeval start;
+	struct timeval end;
+	gettimeofday(&start, NULL);
+	int i = 0;
+	while (i < 6000){
+		int random = rand() % 10;
+		if(random < 5){
+			saved[pos] = malloc(1);
+			pos++;
+			count++;
+		}else{
+			if(pos != 0){
+				free(saved[pos-1]);
+				pos--;
+			}
+		}
+		if(count == 3000){
+			break;
+		}
+		i++;
+	}
+	int diff = 3000-count;
+	if(diff != 0){
+		for(i = 0;i<diff;i++){
+			saved[pos] = malloc(1);
+			pos++;
+		}
+	}
+	pos--;
+	while(pos >= 0){
+		free(saved[pos]);
+		pos--;
+	}
+	gettimeofday(&end, NULL);
+	long int total = ((end.tv_sec * 1000000 + end.tv_usec) - (start.tv_sec * 1000000 + start.tv_usec));
+	return total;
+}
+
 int testD(){
 	int total = 0, counter = 0;
 	char * a[MEMES];
 	int freeSpace = SIZE - 4;
 	srand(time(NULL));
-	while (counter < 1){
+	while (counter < 100){
+		// printf("ASDFJASLKFJADSLKFJASDFLKJ\n");
 		clock_t start = clock(), diff;
 		int r = (rand() % 100) + 1, i = 0, freeIndex = 0, mallocIndex = 0; 
 		while (i < 2*MEMES){
@@ -113,7 +162,7 @@ int testD(){
 			if (mallocIndex == MEMES || freeSpace <= 6){
 				if (freeIndex < MEMES){
 					int * temp = (int *) (a[freeIndex]-4);
-					printf("freeing %d\n", *temp);
+					// printf("freeing %d\n", *temp);
 					freeSpace += 4 + (*temp & ~1);
 					free(a[freeIndex++]);
 				}
@@ -121,7 +170,7 @@ int testD(){
 			else if (freeIndex >= mallocIndex){
 				if (mallocIndex < MEMES){
 					int toMalloc = (r+4) < freeSpace ? r : freeSpace-4;
-					printf("mallocing %d\n", toMalloc);
+					// printf("mallocing %d\n", toMalloc);
 					a[mallocIndex++] = (char *) malloc(toMalloc);
 					freeSpace -= (r + 4);
 					if (a[mallocIndex-1] == NULL){
@@ -132,7 +181,7 @@ int testD(){
 			} else if (r > 50){
 				if (mallocIndex < MEMES){
 					int toMalloc = (r+4) < freeSpace ? r : freeSpace-4;
-					printf("mallocing %d\n", toMalloc);
+					// printf("mallocing %d\n", toMalloc);
 					a[mallocIndex++] = (char *) malloc(toMalloc);
 					freeSpace -= ((r & ~1) + 4);
 					if (a[mallocIndex-1] == NULL){
@@ -145,16 +194,13 @@ int testD(){
 				if (freeIndex < 3000){
 					int * temp = (int *) (a[freeIndex]-4);
 					freeSpace += 4 + (*temp & ~1);
-					printf("freeing %d\n", *temp);
+					// printf("freeing %d\n", *temp);
 					free(a[freeIndex++]);
 				}
 			}
 			r = (rand() % 100) + 1;
 			i++;
-			if (i % 10 == 0){
-				printf("%d\n", i/100);
-				printHeap();
-			}
+			// printHeap();
 		}
 		diff = clock() - start;
 		total += diff;
@@ -163,10 +209,22 @@ int testD(){
 	return total/100;
 }
 int main(){
-	// printf("%d\n", testA());
-	// printf("%d\n", testB());
+	// int total = 0;
+	// int i = 0;
+	// for (; i < 100; i++)
+	// 	total+=test_c();
+	// printf("%d\n", total/100);
+	// printHeap();
+	printf("%d\n", testA());
+	printHeap();
+	printf("%d\n", testB());
+	printHeap();
+	printf("%d\n", testC());
+	printHeap();
 	printf("%d\n", testD());
 	printHeap();
+	// printHeap();
+	// printHeap();
 	// int total = 0;
 	// int i = 0;
 	// for (;i<100000;i++){
@@ -203,10 +261,30 @@ int main(){
 	// }
 	// printf("4\n");
 	// printHeap();
-	// char * a[10];
-	// printf("1\n");
+	char * a[10];
+	printf("1\n");
+	printHeap();
+	a[0] = malloc(64);
+	a[1] = malloc(83);
+	a[2] = malloc(85);
+	printf("1\n");
+	printHeap();
+	free(a[0]);
+	printf("2\n");
+	printHeap();
+	a[3] = malloc(61);
+	printHeap();
+	// free(a[0]);
+	// printf("2\n");
 	// printHeap();
-	// a[0] = malloc(70);
+	// a[3] = malloc(2);
+	// printHeap();
+	// free(a[1]);
+	// printf("2\n");
+	// printHeap();
+	// a[3] = malloc(99);
+	// printf("3\n");
+	// printHeap();
 	// printf("2\n");
 	// printHeap();
 	// a[1] = malloc(66);
