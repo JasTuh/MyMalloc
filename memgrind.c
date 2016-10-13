@@ -227,14 +227,10 @@ int main(){
 	// printHeap();
 	// int total = 0;
 	// int i = 0;
-	// for (;i<100000;i++){
-	// 	total += testD();
-	// 	if (i % 50 == 0){
-	// 		printHeap();
-	// 	}
-	// 	printf("%d\n", i);
+	// for (;i<100;i++){
+	// 	total += test_c();
 	// }
-	// printf("%d\n", total/100000);
+	// printf("%d\n", total/100);
 	// char* saved[10];
 	// int i;
 	// srand(time(NULL));

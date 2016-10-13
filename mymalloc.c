@@ -14,7 +14,7 @@ void * split(int * p, int bytesOrOne, int toAdd){
 		return toReturn;
 	}
 
-	if (*p != 0 && (*p)-4 <= (bytesOrOne-1)){
+	if (*p != 0 && (*p)-6 <= (bytesOrOne-1)){
 		*p += 1;
 		void * toReturn = ((void *)p)+4;
 		return toReturn;
