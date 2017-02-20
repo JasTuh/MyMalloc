@@ -42,6 +42,9 @@ void * split(int * p, int bytesOrOne, int toAdd){
 
 void * mymalloc(int bytes, char * file, int line){
 	if (bytes % 2 == 1){bytes++;}
+	if (bytes == 0){
+		return NULL;
+	}
 	int * p = (int *) (&myblock[0]);
 	int bytesOrOne = (bytes | 1);
 	if (*p == 0){
@@ -65,6 +68,9 @@ void * mymalloc(int bytes, char * file, int line){
 	// printf("%s made this function error on line %d\n", file, line);
 	return NULL;
 }
+/**
+ *
+ **/
 void combine(){
 	int * current = (int*)(&myblock[0]);
 	int * prev = NULL;
@@ -94,26 +100,34 @@ void combine(){
 		combine();
 	}
 }
+
+/** 
+ * Prints the implicit list in malloc.
+ **/
 void printHeap(){
 	int * p = (int*)(&myblock[0]);
 	int toAdd = 0;
 	while ((void *)p < (void *)&myblock[SIZE-1] && *p != 0){		
 		int oldValue = *p;
-		printf("found a %d at %d\n", *p, ((void *)p - (void *)&myblock[0]));
+		printf("found a %d at %li\n", *p, ((void *)p - (void *)&myblock[0]));
 		p = (int *) (&myblock[(toAdd+(oldValue&~1) + 4)]);
 		toAdd+=(oldValue&~1)+4;
 	}
 }
 //add going through the list 
 void myfree(void * toFree, char * file, int line){
+	if (toFree < (void *) &myblock[0] || toFree > (void *) &myblock[SIZE-1]){
+		printf("ERROR: pointer given to free from file %s at line %d caused free to error\n", file, line);
+		exit(1);
+	}
 	int * p = (int *) ((toFree-4));
 	if (*p == 0){
-		printf("ERROR YOUR FREEING SHIT YOU DONT HAVE\n");
-		return;
+		printf("ERROR: pointer given to free from file %s at line %d caused free to error\n", file, line);
+		exit(1);
 	}
 	if (*p % 2 == 0){
-		printf("THATS ALREADY FREED\n");
-		return;
+		printf("ERROR: pointer given to free from file %s at line %d was already free\n", file, line);
+		exit(1);
 	}
 	*p = *p - 1;
 	combine();

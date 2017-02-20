@@ -1,0 +1,16 @@
+testplan
+
+testE:
+	malloc randomly between 10 and 100 bytes until you reach 10000 bytes 
+then free each pointer one by one.
+
+	Test E was chosen because it was meant to show the coallescing of the free() function as it freed each block one by one.
+	
+testF: 
+	malloc 10 bytes each time until 3000 bytes
+	free every other block
+	then malloc 11 bytes  up until you reach 50000 total bytes malloced
+	Then free the remaning pointers one by one.
+
+	TestF was included because it exhibits fragmentation where every other block of memory was freed, then blocks bigger than the size of each freed block 
+	was malloced. So the malloc would search through each freed space, find the size to small then move on until it finally malloced it at the beginning of
