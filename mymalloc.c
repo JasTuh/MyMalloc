@@ -21,22 +21,11 @@ void * split(int * p, int bytesOrOne, int toAdd){
 	}
 	int oldValue = *p == 0 ? (SIZE-4) : *p;
 	*p = bytesOrOne;
-	// printf("setting memory address %d to %d\n", p, bytesOrOne);
-
 	void * toReturn = ((void *)p)+4;
 	int * p1 = (int *) (&myblock[(toAdd + 4 + bytesOrOne - 1)]);
 
 	int newValue = (oldValue - (4 + (bytesOrOne - 1)));
-	// printf("FUCK THOMAS %d AND %d AND %d\n", (toAdd + 4 + bytesOrOne - 1), newValue, (toAdd + 4 + bytesOrOne - 1) - (bytesOrOne - 1));
-	// printf("*p = %d \n", *p);
-	// if (newValue <= 0){ //was <= 1
-	// 	*p += (toAdd + 4 + bytesOrOne - 1) - (bytesOrOne - 1);
-	// 	return toReturn;	
-	// }
-	// else{ 
-		// printf("setting memory address %d to %d\n", p1, newValue);
-		*p1 = newValue;
-	// }
+    *p1 = newValue;
 	return toReturn;
 }
 
@@ -65,7 +54,6 @@ void * mymalloc(int bytes, char * file, int line){
 			return split(p,bytesOrOne, toAdd);
 		}
 	}
-	// printf("%s made this function error on line %d\n", file, line);
 	return NULL;
 }
 /**
@@ -75,7 +63,6 @@ void combine(){
 	int * current = (int*)(&myblock[0]);
 	int * prev = NULL;
 	int toAdd = 0;
-	// printHeap();
 	int callAgain = 0;
 	while((void *)current < (void *)&myblock[SIZE] && *current != 0){	
 		int currentValue = *current;
@@ -114,7 +101,6 @@ void printHeap(){
 		toAdd+=(oldValue&~1)+4;
 	}
 }
-//add going through the list 
 void myfree(void * toFree, char * file, int line){
 	if (toFree < (void *) &myblock[0] || toFree > (void *) &myblock[SIZE-1]){
 		printf("ERROR: pointer given to free from file %s at line %d caused free to error\n", file, line);
